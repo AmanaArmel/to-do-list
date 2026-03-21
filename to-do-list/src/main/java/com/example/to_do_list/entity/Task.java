@@ -22,6 +22,9 @@ public class Task {
     private TaskStatus status;
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @PrePersist
     protected void onCreate() {

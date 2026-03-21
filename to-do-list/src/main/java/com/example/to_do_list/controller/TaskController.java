@@ -24,7 +24,7 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping
-    public ResponseEntity<Task> create(@Valid @RequestBody TaskDTO taskDTO){
+    public ResponseEntity<TaskResponseDTO> create(@Valid @RequestBody TaskDTO taskDTO){
         return new ResponseEntity<>(taskService.createTask(taskDTO), HttpStatus.CREATED);
     }
     @GetMapping
@@ -37,7 +37,7 @@ public class TaskController {
         return ResponseEntity.ok(taskService.findById(id));
     }
     @PutMapping("/{id}")
-    public ResponseEntity<Task> update(@PathVariable Long id,@Valid @RequestBody Task task){
+    public ResponseEntity<TaskResponseDTO> update(@PathVariable Long id,@Valid @RequestBody TaskDTO task){
         return ResponseEntity.ok(taskService.updateTask(id, task));
     }
     @DeleteMapping("/{id}")
@@ -46,7 +46,7 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
     @PatchMapping("/{id}/complete")
-    public ResponseEntity<Task> completeTask(@PathVariable Long id){
+    public ResponseEntity<TaskResponseDTO> completeTask(@PathVariable Long id){
         return ResponseEntity.ok(taskService.markAsCompleted(id));
     }
 }
