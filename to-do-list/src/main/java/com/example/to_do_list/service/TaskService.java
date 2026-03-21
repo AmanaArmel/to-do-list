@@ -4,6 +4,7 @@ import com.example.to_do_list.dto.TaskDTO;
 import com.example.to_do_list.dto.TaskResponseDTO;
 import com.example.to_do_list.entity.Task;
 import com.example.to_do_list.entity.TaskStatus;
+import com.example.to_do_list.mapper.TaskMapper;
 import com.example.to_do_list.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final TaskMapper taskMapper;
 
     public Task createTask(TaskDTO dto){
         Task task = Task.builder()
@@ -28,7 +30,7 @@ public class TaskService {
     public Page<TaskResponseDTO> findAll(Pageable pageable) {
         Page<Task> taskPage = taskRepository.findAll(pageable);
 
-        return taskPage.map(this::mapToResponseDTO);
+        return taskPage.map(taskMapper::toDto);
     }
     public Task findById(Long id) {
         return taskRepository.findById(id).orElseThrow(()-> new RuntimeException("Tâche non trouvée avec l'id : " + id));
@@ -48,12 +50,5 @@ public class TaskService {
         Task task = findById(id);
         task.setStatus(TaskStatus.DONE);
         return taskRepository.save(task);
-    }
-    private TaskResponseDTO mapToResponseDTO(Task task){
-        return  TaskResponseDTO.builder()
-                .id(task.getId())
-                .title(task.getTitle())
-                .status(task.getStatus())
-                .build();
     }
 }
